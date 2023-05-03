@@ -1,0 +1,40 @@
+import time
+
+start = time.time()
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+
+
+# An instance of RSAPrivateKey
+private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=7680,
+)
+
+
+pem = private_key.private_bytes(
+   encoding=serialization.Encoding.PEM,
+   format=serialization.PrivateFormat.TraditionalOpenSSL,
+   encryption_algorithm=serialization.NoEncryption()
+)
+pem = str(pem, 'utf-8')
+
+
+# Serializing private key
+with open("private.pem", "w+") as pubfile:
+    pubfile.write(pem)
+
+public_key = private_key.public_key()
+
+
+# Serializing public key
+pem = public_key.public_bytes(
+   encoding=serialization.Encoding.PEM,
+   format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+pem = str(pem, 'utf-8')
+
+with open("public.pem", "w+") as pubfile:
+    pubfile.write(pem)
+end = time.time()
+print(end - start)
